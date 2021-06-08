@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const db = require ('./db');
 
+db('mongodb+srv://user:user1234@cluster0.64hbj.mongodb.net/user?retryWrites=true&w=majority');
 // const router = require('./components/message/network');
 const router = require('./network/routes');
 
