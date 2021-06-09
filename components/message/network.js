@@ -1,11 +1,21 @@
 
 const express = require('express');
 
+// !para enviar archivos
+
+const multer = require('multer');
+
 const response = require('../../network/response'); // hacemos la conexion con el archivo externo
 
 const controller = require('./controller');
 
 const router = express.Router();
+
+// !SUBIR ARCHIVOS--------------
+
+const upload = multer ({
+    dest: 'public/files/',
+});
 
 // !PEDIMOS INFORMACION
 router.get('/', function( req, res){
@@ -19,20 +29,14 @@ router.get('/', function( req, res){
         .catch( e => {
             response.error(req, res, 'Unexpected Error', 500, e);
         })
-    // console.log(req.headers);
-    // res.header({
-    //     "custom-header": "Nuestro valor personalizado",
-    // });
-    // res.send('Lista de mensajes');
-    // response.success(req, res, 'Lista de mensajes');
 });
 
 // !INYECTAMOS INFORMACION
-
-router.post('/', function( req, res){
+// !aca tambien esta el archivo enviado junto el el archivo file
+router.post('/', upload.single('file'), function( req, res){
     // console.log(req.query);
-
-    controller.addMessage(req.body.user, req.body.message)
+    // console.log(req.file.originalname);
+    controller.addMessage(req.body.chat, req.body.user, req.body.message, req.file)
 
     // !como estamos trabajando con promesas
     .then((fullMessage) => {
@@ -56,9 +60,10 @@ router.patch('/:id', function(req, res){
             response.error(req, res, 'Error interno', 500, e);
         });
 
-    // res.send('ok');
 });
 
+
+// !ELIMINAMOS INFORMACION
 router.delete('/:id', function(req, res){
     controller.deleteMessage(req.params.id)
         .then(() => {

@@ -3,15 +3,23 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const mySchema = new Schema({
-    user: String,
+    chat: {
+      type: Schema.ObjectId,
+      ref: 'Chat',
+    },
+    user: {
+      type: Schema.ObjectId,
+      ref: 'User',
+    },
     message: {
       type: String,
       required:  true,
     },
     date: Date,
+    file: String,
 });
 
-// !-----usar el esquema
+// !------------- usar el esquema -----------------------
 
 const model = mongoose.model('Message', mySchema);
 module.exports = model;
